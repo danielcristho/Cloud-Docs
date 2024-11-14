@@ -1,0 +1,13 @@
+- name: Deploys VM based on cloud image
+  hosts: localhost
+  gather_facts: yes
+  become: yes
+  vars:
+    pool_dir: "/var/lib/libvirt/images"
+    vm: mesin1
+    vcpus: 1
+    ram_mb: 1024
+    cleanup: no
+    net: default
+    ssh_pub_key: "/root/.ssh/id_rsa.pub"
+    interface_name: "enp1s0"
