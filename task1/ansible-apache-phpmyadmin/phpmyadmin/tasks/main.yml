@@ -1,0 +1,97 @@
+---
+- name: Install MySQL
+  ansible.builtin.apt:
+    name:
+      - mysql-server
+      - mysql-client
+      - python3-mysqldb
+
+    state: present
+
+- name: Create Database
+  community.mysql.mysql_db:
+    name: '{{ db_name }}'
+    state: present
+
+- name: Config user
+  community.mysql.mysql_user:
+    name: '{{ db_user }}'
+    password: '{{ db_pass }}'
+    encrypted: true
+    priv: '{{ db_name }}.*:ALL'
+    state: present
+
+- name: Enable remote login to mysql
+  ansible.builtin.lineinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    regexp: '^bind-address'
+    line: 'bind-address = 0.0.0.0'
+    backup: true
+  notify:
+    - Restart mysql
+
+- name: Add PHP repository
+  ansible.builtin.apt_repository:
+    repo: "ppa:ondrej/php"
+    state: present
+
+- name: Install packages
+  ansible.builtin.apt:
+    name:
+      - php8.2-mysql
+      - php8.2-mbstring
+      - php8.2-xml
+      - php8.2-bcmath
+      - php8.2-curl
+      - php8.2-cli
+      - php8.2-common
+      - php8.2-zip
+      - php8.2-gd
+      - phpmyadmin
+    state: present
+    update_cache: true
+
+- name: Configure debconf for phpMyAdmin
+  debconf:
+    name: phpmyadmin
+    question: "{{ item.question }}"
+    value: "{{ item.value }}"
+    vtype: "{{ item.vtype }}"
+  loop:
+    - { question: 'phpmyadmin/dbconfig-install', value: 'true', vtype: 'boolean' }
+    - { question: 'phpmyadmin/app-password-confirm', value: '{{ db_pass }}', vtype: 'password' }
+    - { question: 'phpmyadmin/mysql/admin-pass', value: '{{ db_pass }}', vtype: 'password' }
+    - { question: 'phpmyadmin/mysql/app-pass', value: '{{ db_pass }}', vtype: 'password' }
+    - { question: 'phpmyadmin/reconfigure-webserver', value: 'apache2', vtype: 'multiselect' }
+
+- name: Configure phpMyAdmin Apache
+  ansible.builtin.template:
+    src: phpmyadmin.conf.j2
+    dest: /etc/apache2/conf-available/phpmyadmin.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Install Composer
+  ansible.builtin.shell:
+    cmd: |
+      curl -sS https://getcomposer.org/installer | php
+      mv composer.phar /usr/local/bin/composer
+    creates: /usr/local/bin/composer
+
+- name: Install phpMyAdmin dependencies via Composer
+  ansible.builtin.command:
+    cmd: composer install
+    chdir: /usr/share/phpmyadmin
+
+- name: Enable phpMyAdmin Apache configuration
+  ansible.builtin.command:
+    cmd: a2enconf phpmyadmin
+  notify:
+    - Restart apache
+
+# - name: Create symlink for phpMyAdmin in web server directory
+#   ansible.builtin.file:
+#     src: /usr/share/phpmyadmin
+#     dest: /var/www/html/phpmyadmin
+#     state: link

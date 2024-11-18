@@ -1,0 +1,8 @@
+---
+- name: Setup Apache & phpmyadmin
+  hosts: all
+  become: true
+  remote_user: ubuntu
+  roles:
+    - apache
+    - phpmyadmin

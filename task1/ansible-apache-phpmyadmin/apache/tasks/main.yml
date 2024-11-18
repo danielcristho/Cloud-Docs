@@ -1,0 +1,61 @@
+---
+- name: Update & Upgrade
+  ansible.builtin.apt:
+    name: aptitude
+    state: present
+    update_cache: true
+
+- name: Install apache2 & other dependencies
+  ansible.builtin.package:
+    name:
+      - apache2
+      - net-tools
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - python3-pip
+      - virtualenv
+      - python3-setuptools
+      - gnupg-agent
+      - autoconf
+      - dpkg-dev
+      - file
+      - g++
+      - gcc
+      - libc-dev
+      - make
+      - pkg-config
+      - re2c
+      - wget
+    state: present
+
+- name: Clone html project
+  changed_when: false
+  ansible.builtin.git:
+    repo: https://github.com/rm77/web-sample-6.git
+    dest: /var/www/html/web-sample-6
+    clone: true
+  notify:
+    - Restart apache
+
+- name: Copy apache config
+  ansible.builtin.template:
+    src: 000-default.conf.j2
+    dest: /etc/apache2/sites-available/000-default.conf
+    mode: preserve
+
+- name: Set mode
+  ansible.builtin.file:
+    path: /var/www/html/web-sample-6
+    state: directory
+    recurse: true
+    mode: "775"
+
+- name: Set ownership
+  ansible.builtin.file:
+    path: /var/www/html/web-sample-6
+    owner: www-data
+    group: www-data
+    recurse: true
+    mode: "0775"
