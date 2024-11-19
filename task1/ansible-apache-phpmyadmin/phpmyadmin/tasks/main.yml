@@ -1,19 +1,21 @@
 ---
-- name: Install MySQL
+- name: Install MySQL & other packages
   ansible.builtin.apt:
     name:
       - mysql-server
       - mysql-client
       - python3-mysqldb
-
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
     state: present
 
-- name: Create Database
+- name: Create mysql database
   community.mysql.mysql_db:
     name: '{{ db_name }}'
     state: present
 
-- name: Config user
+- name: Config mysql user
   community.mysql.mysql_user:
     name: '{{ db_user }}'
     password: '{{ db_pass }}'
@@ -30,28 +32,27 @@
   notify:
     - Restart mysql
 
-- name: Add PHP repository
+- name: Menambahkan repository php
   ansible.builtin.apt_repository:
     repo: "ppa:ondrej/php"
     state: present
 
-- name: Install packages
+- name: Instal paket php8.1, phpmyadmin dan beberapa dependensi.
   ansible.builtin.apt:
     name:
-      - php8.2-mysql
-      - php8.2-mbstring
-      - php8.2-xml
-      - php8.2-bcmath
-      - php8.2-curl
-      - php8.2-cli
-      - php8.2-common
-      - php8.2-zip
-      - php8.2-gd
+      - php8.1-mysql
+      - php8.1-mbstring
+      - php8.1-xml
+      - php8.1-curl
+      - php8.1-cli
+      - php8.1-common
+      - php8.1-gd
+      - libapache2-mod-php8.1
       - phpmyadmin
     state: present
     update_cache: true
 
-- name: Configure debconf for phpMyAdmin
+- name: Konfigurasi debconf untuk phpMyAdmin
   debconf:
     name: phpmyadmin
     question: "{{ item.question }}"
@@ -72,26 +73,33 @@
     group: root
     mode: '0644'
 
-- name: Install Composer
-  ansible.builtin.shell:
-    cmd: |
-      curl -sS https://getcomposer.org/installer | php
-      mv composer.phar /usr/local/bin/composer
-    creates: /usr/local/bin/composer
-
-- name: Install phpMyAdmin dependencies via Composer
-  ansible.builtin.command:
-    cmd: composer install
-    chdir: /usr/share/phpmyadmin
-
 - name: Enable phpMyAdmin Apache configuration
   ansible.builtin.command:
-    cmd: a2enconf phpmyadmin
+    cmd: a2enconf phpmyadmin.conf
   notify:
     - Restart apache
 
-# - name: Create symlink for phpMyAdmin in web server directory
-#   ansible.builtin.file:
-#     src: /usr/share/phpmyadmin
-#     dest: /var/www/html/phpmyadmin
-#     state: link
+- name: Enable PHP module
+  ansible.builtin.command:
+    cmd: a2enmod php8.1
+
+- name: Enable rewrite module
+  ansible.builtin.command:
+    cmd: a2enmod rewrite
+
+- name: Set mode
+  ansible.builtin.file:
+    path: /usr/share/phpmyadmin
+    state: directory
+    recurse: true
+    mode: "775"
+
+- name: Set ownership
+  ansible.builtin.file:
+    path: /usr/share/phpmyadmin
+    owner: www-data
+    group: www-data
+    recurse: true
+    mode: "0775"
+  notify:
+    - Restart apache
