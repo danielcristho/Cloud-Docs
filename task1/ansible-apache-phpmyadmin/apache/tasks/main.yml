@@ -7,7 +7,11 @@
 
 - name: Install apache2
   ansible.builtin.package:
-    name: apache2
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+      - apache2
     state: present
 
 - name: Clone html project
