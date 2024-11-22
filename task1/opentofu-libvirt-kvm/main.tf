@@ -16,16 +16,23 @@ resource "null_resource" "cache_image" {
   }
 }
 
-resource "libvirt_volume" "ubuntu20-qcow2" {
-  count  = length(var.vm_hostnames)
-  name   = "ubuntu20-${count.index}.qcow2"
-  pool   = var.libvirt_disk_path
+# Volume untuk base image
+resource "libvirt_volume" "base" {
+  name   = "base.qcow2"
   source = "/tmp/ubuntu-20.04.qcow2"
+  pool   = var.libvirt_disk_path
   format = "qcow2"
-
   depends_on = [null_resource.cache_image]
 }
 
+# Volume untuk VM dengan ukuran 10GB
+resource "libvirt_volume" "ubuntu20-qcow2" {
+  count          = length(var.vm_hostnames)
+  name           = "ubuntu20-${count.index}.qcow2"
+  base_volume_id = libvirt_volume.base.id
+  pool           = var.libvirt_disk_path
+  size           = 10737418240  # 10GB
+}
 
 data "template_file" "user_data" {
   count    = length(var.vm_hostnames)
