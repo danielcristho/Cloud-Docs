@@ -1,5 +1,5 @@
 [vm1]
-192.168.122.116 ansible_user=ubuntu
+192.168.122.33 ansible_user=ubuntu
 
 [vm2]
- 192.168.122.227 ansible_user=ubuntu
+192.168.122.78 ansible_user=ubuntu

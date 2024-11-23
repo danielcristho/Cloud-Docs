@@ -43,17 +43,17 @@
     repo: "ppa:ondrej/php"
     state: present
 
-- name: Instal paket php8.1, phpmyadmin dan beberapa dependensi.
+- name: Instal paket php8.0, phpmyadmin dan beberapa dependensi.
   ansible.builtin.apt:
     name:
-      - php8.1-mysql
-      - php8.1-mbstring
-      - php8.1-xml
-      - php8.1-curl
-      - php8.1-cli
-      - php8.1-common
-      - php8.1-gd
-      - libapache2-mod-php8.1
+      - php8.0-mysql
+      - php8.0-mbstring
+      - php8.0-xml
+      - php8.0-curl
+      - php8.0-cli
+      - php8.0-common
+      - php8.0-gd
+      - libapache2-mod-php8.0
       - phpmyadmin
     state: present
     update_cache: true
@@ -87,7 +87,7 @@
 
 - name: Enable PHP module
   ansible.builtin.command:
-    cmd: a2enmod php8.1
+    cmd: a2enmod php8.0
 
 - name: Enable rewrite module
   ansible.builtin.command:
