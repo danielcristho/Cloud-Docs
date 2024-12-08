@@ -18,7 +18,7 @@ Run phpMyAdmin container connected to the MySQL container, providing a web inter
 ## Case 4
 
 Description
-Create simple load balancing using Nginx and Flask. The worker will run on port `10001` and `10002`.
+Create simple load balancing using Nginx and Flask. The workers will run on port `10001` and `10002`.
 
 The architecture
 
