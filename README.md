@@ -1,3 +1,4 @@
 # Cloud Computing Docs
 
-[1. Provisioning and Manage KVM Using Ansible and OpenTofu.](/task1/)
+- [Task 1: Provisioning and Manage KVM Using OpenTofu and Ansible.](/task1/)
+- [Task 2: Docker Exploration.](/task2/)
