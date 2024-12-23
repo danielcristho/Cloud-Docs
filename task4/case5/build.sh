@@ -1,0 +1,1 @@
+docker build -t vue-nginx:1.1 .

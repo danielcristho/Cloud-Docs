@@ -30,6 +30,9 @@ Description
 
 This Docker Compose will sets up a development environment to serve a Streamlit UI via the app service on port 8501, with Nginx acting as a reverse proxy for HTTP (80) and HTTPS (443) traffic, sharing configuration and SSL certificates from the `nginx` directory.
 
-The architecture
+The architecture:
 
 ![tugas3](https://github.com/user-attachments/assets/4a428854-d8e9-48e8-bef5-f2db2b21354c)
+
+Ouput:
+![streamlit example](https://github.com/user-attachments/assets/b53c2155-682d-468f-9cae-a05252b23e99)

@@ -10,9 +10,9 @@ ADD supervisord.conf /tmp/supervisord.conf
 EXPOSE 80
 EXPOSE 9999
 
-ENV SESSIONAGE 60
-ENV REAUTHENTICATION 60
-ENV IPEXPIRE 120
+ENV SESSIONAGE=60
+ENV REAUTHENTICATION=60
+ENV IPEXPIRE=120
 VOLUME ["/var/www/localhost/htdocs"]
 
 ENTRYPOINT ["sh","-C","/tmp/start.sh"]
