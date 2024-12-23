@@ -34,5 +34,5 @@ The architecture:
 
 ![tugas3](https://github.com/user-attachments/assets/4a428854-d8e9-48e8-bef5-f2db2b21354c)
 
-Ouput:
+Output:
 ![streamlit example](https://github.com/user-attachments/assets/b53c2155-682d-468f-9cae-a05252b23e99)
