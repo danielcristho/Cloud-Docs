@@ -28,7 +28,7 @@ Build image and run container using the Nginx Alpine image, installs PHP-FPM and
 
 Description
 
-This project using a multi-stage build to create a Vue.js application. In the first stage, it installs dependencies, copies the application code, and builds the project using Node.js. In the second stage, it serves the production-ready files using Nginx.
+This project using a multi-stage build to create a Vue.js application. In the first stage, it installs dependencies, copies the application code, and builds the project using Node.js. In the second stage, it serves the production-ready files using Nginx. References from: https://github.com/efmanu/my-vue-app.
 
 The architecture:
 
