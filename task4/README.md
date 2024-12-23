@@ -32,4 +32,4 @@ This project using a multi-stage build to create a Vue.js application. In the fi
 
 The architecture:
 
-![tugas4](![tugas4](https://github.com/user-attachments/assets/34bbb084-34eb-4c19-aaaa-1402d2a38ed6))
+![tugas4](https://github.com/user-attachments/assets/34bbb084-34eb-4c19-aaaa-1402d2a38ed6)
