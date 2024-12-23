@@ -1,4 +1,4 @@
-# Serve Application using Docker Compose
+# Serving Applications Using Docker Compose
 
 ## Case 1
 
